@@ -1,0 +1,6 @@
+{
+  "environment": "production",
+  "mail": {
+    "host": "prod-mail-sever"
+  }
+}

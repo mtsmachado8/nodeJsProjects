@@ -1,0 +1,6 @@
+{
+  "environment": "development",
+  "mail": {
+    "host": "dev-mail-sever"
+  }
+}
