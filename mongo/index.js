@@ -46,6 +46,7 @@ async function getCourses(){
 	// /api/courses?pageNumber=2&pageSize=10
 
 	const courses = await Course
+
 		// .find({ price: { $gte: 10, $lte: 20 } }) // $ to indicate an operator
 		// .find({ price: { $in: [10,15,20] } }) // One of its values
 		// .find() // use it with logical operator
@@ -56,7 +57,7 @@ async function getCourses(){
 		// .find( {author: /.*Mat.*/i }) // Regex contains Mat
 		.find( {author: 'Mateus', isPublished: true})
 		// .skip((pageNumber -1) * pageSize) // Pagination
-		.limit(pageSize)
+		// .limit(pageSize)
 		.sort({ date: 1 }) //1 is ascending order. -1 is descending
 		.count();
 		// .select( {name: 1, tags: 1});
@@ -64,4 +65,14 @@ async function getCourses(){
 	console.log(courses);
 }
 
-getCourses();
+async function getOneCourse(){
+	return await Course.findById('5c06dd3e2b07ca2c40ff5d59');
+}
+async function run(){
+	// await createCourse();
+	// const courses = await getCourses();
+	const courses = await getOneCourse();
+	console.log(courses);
+}
+
+run();
