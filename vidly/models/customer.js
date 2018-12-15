@@ -20,7 +20,7 @@ const Customer = mongoose.model('Customer', mongoose.Schema({
 	}
 }));
 
-function validateCustomer(customer){
+function validate(customer){
 
 	const schema = {
 		name: Joi.string().min(5).max(50).required(),
@@ -32,4 +32,4 @@ function validateCustomer(customer){
 }
 
 exports.Customer = Customer;
-exports.validate = validateCustomer;
+exports.validate = validate;

@@ -47,7 +47,7 @@ const schema = new mongoose.Schema({
 	}, //required will force array, but still can pass a empty one
 	date: {type: Date, default: Date.now()},
 	isPublished: Boolean
-});
+});['frontend'.'react']
 
 const Course = mongoose.model('Course', schema);
 
