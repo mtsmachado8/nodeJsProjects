@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Joi = require('joi');
+import Joi from 'joi'
 
 const schema =  mongoose.Schema({
 	name: {

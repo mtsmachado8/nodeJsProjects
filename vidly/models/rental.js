@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Joi = require('joi');
+import Joi from 'joi'
 
 // -Not using all properties inside customer
 const customer_minified_schema = mongoose.Schema({
