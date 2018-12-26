@@ -1,3 +1,5 @@
+const auth = require('../middleware/auth'); //Authorization not Authentication
+const admin = require('../middleware/admin-auth'); //Authorization not Authentication
 const _ = require('lodash');
 const express = require('express');
 const router = express.Router();
@@ -10,23 +12,26 @@ router.get('/', async (req, res) => {
 	res.send(users);
 });
 
-// -Get a specific user
-router.get('/:id', async (req, res) => {
-	const user = await User.findById(req.params.id);
+// -Get the currently logged in user
+router.get('/me', auth, async (req, res) => {
+	try{
+		const user = await User.findById(req.user._id).select('-password');
+		if(!user) res.status(404).send('The user couldnt be found');
 
-	if(!user) res.status(404).send('The user couldnt be found');
-
-	return res.status(200).send(user);
-
+		res.status(200).send(user);
+	}catch(e){
+		console.log(e);
+	}
+	
 });
 
 // -Delete a user
-router.delete('/:id', async (req, res) => {
-	const genre = await User.findByIdAndDelete(req.params.id);
+router.delete('/:id', [auth, admin], async (req, res) => {
+	const user = await User.findByIdAndDelete(req.params.id);
 
-	if(!genre) res.status(404).send('The genre couldnt be found');
+	if(!user) res.status(404).send('The user couldnt be found');
 
-	res.status(200).send(genre);
+	res.status(200).send(user);
 
 });
 
@@ -36,8 +41,8 @@ router.post('/', async (req, res) => {
 		const { error } = validate(req.body);
 		if(error) return res.status(400).send(error.details[0].message);
 
-		let user = User.findOne({email: req.body.email});
-		if(!user) return res.status(400).send('User already registered.');
+		let user = await User.findOne({email: req.body.email});
+		if(user) return res.status(400).send('User already registered.');
 
 		user = new User(_.pick(req.body, ['name', 'email', 'password']));
 
@@ -46,23 +51,25 @@ router.post('/', async (req, res) => {
 
 		await user.save();
 
-		res.send(_.pick(user, ['_id', 'name', 'email']));
+		const token = await user.generateAuthToken();
+		res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
+
 	}catch(e){
 		res.status(500).send(e.message);
 	}
 });
 
-// -Put a updated genre
+// -Put a updated user
 router.put('/:id', async (req, res) => {
 	const { error } = validate(req.body);
 
 	if(error) return res.status(400).send(error.details[0].message);
 
-	const genre = await User.findByIdAndUpdate(req.params.id, {name: req.body.name}, {new: true} );
+	const user = await User.findByIdAndUpdate(req.params.id, {name: req.body.name}, {new: true} );
 
-	if(!genre) return res.status(404).send('The genre was not found');
+	if(!user) return res.status(404).send('The user was not found');
 
-	res.send(genre);
+	res.send(user);
 });
 
 module.exports = router;

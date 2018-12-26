@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
+const config = require('config');
+const jwt = require('jsonwebtoken');
 
-const User = mongoose.model('Users', mongoose.Schema({
+const userSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: true,
@@ -21,7 +23,17 @@ const User = mongoose.model('Users', mongoose.Schema({
 		minlength: 6,
 		maxlength: 255,
 	},
-}));
+	isAdmin: Boolean,
+	// roles: [],
+	// operations: []
+
+});
+
+userSchema.methods.generateAuthToken = async function(){ // Arrow function dont have this. so use function itself
+	return await jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, config.get('jwtPrivateKey')); // just one Admin for now (mtsmachado8@gmail.com)
+};
+
+const User = mongoose.model('Users', userSchema);
 
 function validate(user){
 
