@@ -10,8 +10,8 @@
   "author": "mtsmachado8",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^1.0.3",
-    "config": "^3.0.1",
+    "bcrypt": "1.0.3",
+    "config": "3.0.1",
     "express": "^4.16.4",
     "express-async-errors": "^3.1.1",
     "fawn": "^2.1.5",
@@ -20,6 +20,8 @@
     "joi-password-complexity": "^2.0.1",
     "jsonwebtoken": "^8.4.0",
     "lodash": "4.17.11",
-    "mongoose": "5.3.15"
+    "mongoose": "5.3.15",
+    "winston": "2.4.0",
+    "winston-mongodb": "3.0.0"
   }
 }
