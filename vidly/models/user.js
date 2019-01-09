@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateAuthToken = async function(){ // Arrow function dont have this. so use function itself
-	return await jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, config.get('jwtPrivateKey')); // just one Admin for now (mtsmachado8@gmail.com)
+	return await jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, config.get('jwtPrivateKey'));
 };
 
 const User = mongoose.model('Users', userSchema);

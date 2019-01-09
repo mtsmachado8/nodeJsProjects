@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 
 async function getAllImages(){
-	const browser = await puppeteer.launch({headless: true});
+	const browser = await puppeteer.launch({headless: false});
 	const page = await browser.newPage();
 	await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36');
 
@@ -20,7 +20,7 @@ async function getAllImages(){
 	});
 
 	await page.goto('https://eshops.mercadolivre.com.br/ESPACO+M');
-	await page.waitFor(10000);
+	// await page.waitFor(10000);
 }
 
 async function loadDesiredPage(browser){
@@ -84,7 +84,7 @@ async function sellReport(){
 
 		console.log(`>>> Total de Vendas: ${total_vendas} Quantidade de Itens Vendidos: ${total_itens_vendidos} <<<`);
 
-		// await browser.close();
+		await browser.close();
 
 	}catch(e){
 		console.log('Error ocurred: ', e);
@@ -92,5 +92,5 @@ async function sellReport(){
 }
 
 (async () => {
-	await getAllImages();
+	await sellReport();
 })();
