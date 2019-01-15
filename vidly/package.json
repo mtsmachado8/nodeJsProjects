@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "set NODE_ENV=dev && set vidly_jwtPrivateKey=secret && nodemon",
-    "test": "set NODE_ENV=local && jest --watchAll --verbose"
+    "test": "set NODE_ENV=local && jest --watchAll --runInBand --verbose",
+    "coverage": "set NODE_ENV=local && jest --runInBand --coverage"
   },
   "author": "mtsmachado8",
   "license": "ISC",

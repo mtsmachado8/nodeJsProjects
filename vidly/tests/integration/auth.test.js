@@ -1,12 +1,17 @@
 const request = require('supertest');
 const { User } = require('../../models/user');
+const { Genre } = require('../../models/genre');
 let server;
 
 
 describe('Auth middleware', () => {
-	beforeEach(() => { server = require('../../index'); });
+	beforeEach(async () => {
+		server = await require('../../index');
+		token = await new User({isAdmin: true}).generateAuthToken();
+	});
 	afterEach(async() => {
-		server.close();
+		await Genre.remove({});
+		await server.close();
 	});
 
 	let token;
@@ -18,14 +23,9 @@ describe('Auth middleware', () => {
 			.send({name: 'genre1'})
 	};
 
-	beforeEach(() => {
-		token = new User().generateAuthToken();
-	});
-
 	it('Should return 400 if token is invalid', async() => {
-		token = '';
+		token = 'a';
 		const res = await executeRequest();
-
 		expect(res.status).toBe(400);
 	});
 
@@ -36,9 +36,17 @@ describe('Auth middleware', () => {
 		expect(res.status).toBe(401);
 	});
 
-	it('Should return 200 if token is valid', async() => {
+	it('Should return 403 if not authorized (user is not admin)', async() => {
+		token = await new User().generateAuthToken();
 		const res = await executeRequest();
 
+		expect(res.status).toBe(403);
+	});
+
+	it('Should return 200 if token is valid', async() => {
+		token = await new User({isAdmin: true}).generateAuthToken();
+		const res = await executeRequest();
+		console.log(res.body);
 		expect(res.status).toBe(200);
 	});
 });

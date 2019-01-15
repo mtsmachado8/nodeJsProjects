@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
 		maxlength: 255,
 	},
 	isAdmin: Boolean,
+	default: false
 	// roles: [],
 	// operations: []
 
