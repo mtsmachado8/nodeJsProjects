@@ -1,7 +1,8 @@
-const winston = require('winston');
+const log = require('winston');
 
 module.exports = function(err, req, res, next){
-	winston.error(err.message, err);
+	log.error(err.message);
+	log.error(err.stack);
 
 	// levels that can be set (only before this level will be logged)
 	// error

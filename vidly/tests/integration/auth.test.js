@@ -10,7 +10,7 @@ describe('Auth middleware', () => {
 		token = await new User({isAdmin: true}).generateAuthToken();
 	});
 	afterEach(async() => {
-		await Genre.remove({});
+		await Genre.deleteMany({});
 		await server.close();
 	});
 
@@ -46,7 +46,7 @@ describe('Auth middleware', () => {
 	it('Should return 200 if token is valid', async() => {
 		token = await new User({isAdmin: true}).generateAuthToken();
 		const res = await executeRequest();
-		console.log(res.body);
+
 		expect(res.status).toBe(200);
 	});
 });

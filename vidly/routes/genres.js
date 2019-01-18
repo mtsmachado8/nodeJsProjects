@@ -5,8 +5,7 @@ const log = require('winston');
 const express = require('express');
 const router = express.Router();
 const { Genre, validate } = require('../models/genre');
-const mongoose = require('mongoose');
-const validateObjId = require('../middleware/validate-object-id');
+const validate_id = require('../middleware/validate-object-id');
 
 // -Get all genres
 router.get('/', async (req, res) => {
@@ -15,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // -Get a specific genre
-router.get('/:id', validateObjId, async (req, res) => {
+router.get('/:id', validate_id, async (req, res) => {
 	const genre = await Genre.findById(req.params.id);
 
 	if(!genre) return res.status(404).send('The genre couldnt be found');
@@ -48,9 +47,8 @@ router.post('/', auth, admin_auth, async (req, res) => {
 });
 
 // -Put a updated genre
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', auth, admin_auth,validate_id, async (req, res) => {
 	const { error } = validate(req.body);
-
 	if(error) return res.status(400).send(error.details[0].message);
 
 	const genre = await Genre.findByIdAndUpdate(req.params.id, {name: req.body.name}, {new: true} );

@@ -17,7 +17,6 @@ describe('auth middleware', () => {
 
 		await auth(req, res, next);
 
-		console.log('status: ',res.status);
 		expect(req.user).toMatchObject(user);
 	});
 });
