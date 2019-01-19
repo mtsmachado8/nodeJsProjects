@@ -26,7 +26,9 @@ describe('/api/return', ()=> {
 	let token;
 
 	beforeEach( async() => {
-		server = require('../../index');
+		server = await require('../../index');
+		token = await new User().generateAuthToken();
+
 		customerId = mongoose.Types.ObjectId();
 		movieId = mongoose.Types.ObjectId();
 
@@ -55,7 +57,7 @@ describe('/api/return', ()=> {
 		return request(server)
 			.post('/api/returns')
 			.set('x-auth-token', token)
-			.send({customerId, movieId})
+			.send({customerId, movieId});
 	};
 
 	it('401 if client is not logged in', async() => {
@@ -67,8 +69,7 @@ describe('/api/return', ()=> {
 	});
 
 	it('400 if customerId is not provided', async() => {
-		token = new User().generateAuthToken();
-		customerId = null;
+		customerId = '';
 
 		const res = await executeRequest();
 
@@ -76,7 +77,19 @@ describe('/api/return', ()=> {
 
 	});
 
+	it('400 if movieId is not provided', async() => {
+		movieId = '';
 
+		const res = await executeRequest();
 
+		expect(res.status).toBe(400);
 
+	});
+
+	it('404 if no rendal found for this customer/movie', async() => {
+		await rental.delete();
+
+		const res = await executeRequest();
+		expect(res.status).toBe(404);
+	});
 });

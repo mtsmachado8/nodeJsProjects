@@ -16,7 +16,7 @@ module.exports = async function(req, res, next){
 		log.info('Auth Middleware Authorized User: ', req.user._id);
 		next();
 	}catch(e){
-		log.warn('Invalid Token: ', token);
+		log.warn('Invalid Token: ', e.message);
 		res.status(400).send('Invalid Token');
 	}
 };
