@@ -10,7 +10,6 @@ module.exports = async function(req, res, next){
 
 	try{
 		req.user = await jwt.verify(token, config.get('jwtPrivateKey'));
-		log.warn('user: ', req.user);
 		if(!req.user) return res.status(401).send('Access Denied. Invalid token');
 
 		log.info('Auth Middleware Authorized User: ', req.user._id);

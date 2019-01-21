@@ -5,12 +5,10 @@ const { User } = require('../models/user');
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 
+const validateReq = require('../middleware/validate-req');
 // -Post auth
-router.post('/', async (req, res) => {
+router.post('/',validateReq(validate), async (req, res) => {
 	try{
-		const { error } = validate(req.body);
-		if(error) return res.status(400).send(error.details[0].message);
-
 		let user = await User.findOne({email: req.body.email});
 		if(!user) return res.status(400).send('Invalid email or password');
 

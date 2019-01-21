@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Movie, validate } = require('../models/movie');
 const { Genre } = require('../models/genre');
+const validateReq = require('../middleware/validate-req');
 
 // -Get all Movies
 router.get('/', async(req, res) => {
@@ -10,11 +11,7 @@ router.get('/', async(req, res) => {
 });
 
 // -Post a Movie
-router.post('/', async(req, res) => {
-	const { error } = validate(req.body);
-
-	if(error) res.status(400).send(error.details[0].message);
-
+router.post('/', validateReq(validate), async(req, res) => {
 	const genre = await Genre.findById(req.body.genreId);
 	if(!genre) return res.status(400).send('Invalid genre');
 

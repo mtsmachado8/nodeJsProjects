@@ -6,6 +6,8 @@ const router = express.Router();
 const { User, validate } = require('../models/user');
 const bcrypt = require('bcrypt');
 
+const validateReq = require('../middleware/validate-req');
+
 // -Get all users
 router.get('/', async (req, res) => {
 	const users = await User.find().sort('name');
@@ -36,11 +38,8 @@ router.delete('/:id', [auth, admin], async (req, res) => {
 });
 
 // -Post a new user
-router.post('/', async (req, res) => {
+router.post('/', validateReq(validate), async (req, res) => {
 	try{
-		const { error } = validate(req.body);
-		if(error) return res.status(400).send(error.details[0].message);
-
 		let user = await User.findOne({email: req.body.email});
 		if(user) return res.status(400).send('User already registered.');
 
@@ -60,11 +59,7 @@ router.post('/', async (req, res) => {
 });
 
 // -Put a updated user
-router.put('/:id', async (req, res) => {
-	const { error } = validate(req.body);
-
-	if(error) return res.status(400).send(error.details[0].message);
-
+router.put('/:id',validateReq(validate), async (req, res) => {
 	const user = await User.findByIdAndUpdate(req.params.id, {name: req.body.name}, {new: true} );
 
 	if(!user) return res.status(404).send('The user was not found');
