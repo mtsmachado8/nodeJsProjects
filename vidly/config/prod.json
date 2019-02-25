@@ -1,5 +1,5 @@
 {
   "jwtPrivateKey": "jwtSecretKey",
   "db": "mongodb://localhost/vidly",
-  "logging_level": "error"
+  "logging_level": "info"
 }
